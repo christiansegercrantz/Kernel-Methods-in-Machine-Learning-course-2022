@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[margin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{comment}
+\usepackage{eurosym}
+
+\graphicspath{ {plots/} }
+
+\title{Kernel methods in machine learning - Penn and paper 2}
+\author{Christian Segercrantz 481056}
+
+
+\begin{document}
+	\maketitle
+	\pagebreak
+\section*{Task 1}
+\begin{align}
+k_c(\mathbf{x}_i, \mathbf{x}_j) =& \left\langle \phi_c(\mathbf{x}_i), \phi_c(\mathbf{x}_j)\right\rangle \\
+=& \left\langle \phi(\mathbf{x}_i) + \frac{1}{N}\sum_{p=1}^{N}\mathbf{x}_p, \phi(\mathbf{x}_j)+\frac{1}{N}\sum_{q=1}^{N}\mathbf{x}_q	\right\rangle \\
+=& \left\langle \phi(\mathbf{x}_i), \phi(\mathbf{x}_j)\right\rangle + \left\langle \phi(\mathbf{x}_i),\frac{1}{N}\sum_{q=1}^{N}\phi(\mathbf{x}_q)\right\rangle +\left\langle \phi(\mathbf{x}_j),	\frac{1}{N}\sum_{p=1}^{N}\phi(\mathbf{x}_p)\right\rangle +\left\langle \frac{1}{N}\sum_{q=1}^{N}\phi(\mathbf{x}_q),\frac{1}{N}\sum_{p=1}^{N}\phi(\mathbf{x}_p)\right\rangle  \\
+=& \left\langle \phi(\mathbf{x}_i), \phi(\mathbf{x}_j)\right\rangle + \frac{1}{N}\sum_{q=1}^{N}\left\langle \phi(\mathbf{x}_i),\phi(\mathbf{x}_q)\right\rangle +\frac{1}{N}\sum_{p=1}^{N}\left\langle \phi(\mathbf{x}_j),	\phi(\mathbf{x}_p)\right\rangle +\frac{1}{N^2}\sum_{q=1}^{N}\sum_{p=1}^{N}\left\langle \phi(\mathbf{x}_q),\phi(\mathbf{x}_p)\right\rangle  \\
+=& k\left( \phi(\mathbf{x}_i), \phi(\mathbf{x}_j)\right) + \frac{1}{N}\sum_{q=1}^{N}k\left( \phi(\mathbf{x}_i),\phi(\mathbf{x}_q)\right) +\frac{1}{N}\sum_{p=1}^{N}k\left( \phi(\mathbf{x}_j),	\phi(\mathbf{x}_p)\right) +\frac{1}{N^2}\sum_{q=1}^{N}\sum_{p=1}^{N}k\left( \phi(\mathbf{x}_q),\phi(\mathbf{x}_p)\right)  \\
+\end{align}
+
+\section*{Task 2}
+\subsection*{2.1}
+\begin{align}
+	P(y=C_1\mid X=\hat{x}) =& \frac{P(y=C_1, X=\hat{x})}{P(X=\hat{x})}, \qquad | \text{Law of conditional probability}\\
+	P(X=\hat{x}) =& P(X=\hat{x}\mid y=C_1)P(y=C_1) + P(X=\hat{x}\mid y=C_2)P(y=C_2) , \qquad | \text{Law of total probability}\\
+	=& P(X=\hat{x}, y=C_1) + P(X=\hat{x}, y=C_2)\\
+	P(y=C_1\mid X=\hat{x}) =& \frac{P(y=C_1, X=\hat{x})}{P(X=\hat{x}, y=C_1) + P(X=\hat{x}, y=C_2)}\\
+	P(y=C, X=x) =& p(y=C, X=x)dx\\
+	P(y=C_1\mid X=\hat{x}) =& \frac{p(y=C_1, X=\hat{x})dx}{p(X=\hat{x}, y=C_1)dx + p(X=\hat{x}, y=C_2)dx}\\
+	=& \frac{p(y=C_1, X=\hat{x})}{p(X=\hat{x}, y=C_1) + p(X=\hat{x}, y=C_2)}\\	
+\end{align}
+\subsection*{2.2}
+We can calculate the the minimum classification error as the intersection of the density functions of the classes:
+\begin{align}
+	P(\text{minimum misclassification error})=& \int_{x \in X} \min(p(x, C_1),p(x, C_2))dx \\
+	\leq& \int_{x \in X} (p(x, C_1)p(x, C_2))^{1/2}dx
+\end{align}
+
+According to the given inequality $min(a, b) \leq (ab)^{1/2}$.
+
+\section*{Task 3}
+The decision function is given by a similar function to the binary classifier, but over all classes. I.e. the decision function is such a function that output's the optimal $k$ based on the probability of each possibility.
+
+The normalization is given by the sum of all possibilities in order to make the function output a value in the range $[0,1]$
+\begin{align}
+	\text{arg}\max_k& \frac{1}{Z}\exp\left\langle \mathbf{w}_k,\mathbf{x}_i\right\rangle, k= 1,2,...N \\
+	Z &= \sum_{k=1}^{N}\exp\left\langle \mathbf{w}_k,\mathbf{x}_i\right\rangle, \\
+	\implies
+	\text{arg}\max_k& \frac{\exp\left\langle \mathbf{w}_k,\mathbf{x}_i\right\rangle}{\sum_{k=1}^{N}\exp\left\langle \mathbf{w}_k,\mathbf{x}_i\right\rangle}, k= 1,2,...N \\
+\end{align}
+which is the softmax function.
+
+\subsection*{Task 4}
+We start by calculating the expecation:
+\begin{align}
+	\mathbb{E}[e^{\lambda\epsilon}] =& \sum_{\{-1,1\}}\frac{1}{2}e^{\lambda\epsilon}d\epsilon\\
+	=& \frac{e^{-\lambda} + e^{\lambda}}{2}
+\end{align}
+and power expand the expecation to
+\begin{align}
+	e^{\lambda} &= \sum_{n=0}^{\infty} \frac{\lambda^n}{n!}\\
+	e^{-\lambda} &= \sum_{n=0}^{\infty} \frac{(-\lambda)^n}{n!} \\
+	\frac{e^{-\lambda} + e^{\lambda}}{2} =& \frac{1}{2}\left(  \sum_{n=0}^{\infty} \frac{\lambda^n}{n!} + \sum_{n=0}^{\infty} \frac{(-\lambda)^n}{n!}\right) \\
+	=& \sum_{n=0}^{\infty} \frac{\lambda^n + (-\lambda)^n}{2n!} \\
+	=& \sum_{n=0}^{\infty} \frac{\lambda^{2n}}{(2n)!} 
+\end{align}
+Since $\lambda^n + (-\lambda)^n = 0$ when $n$ is odd, we could rewrite the sum as as the one on the last row.
+
+Now we power series expand the other term:
+\begin{align}
+	e^{\frac{\lambda^2}{2}} =& \sum_{n=0}^{\infty}\frac{\left( \frac{\lambda^2}{2}\right) ^n}{n!} = \sum_{n=0}^{\infty}\frac{ \lambda^{2n}}{2^n n!} 
+\end{align}
+
+Since $2!$ grows faster than $2^n$ we can conclude that $\mathbb{E}[e^{\lambda\epsilon}] \leq e^{\frac{\lambda^2}{2}}$.
+
+\end{document}
+
+
+
+
