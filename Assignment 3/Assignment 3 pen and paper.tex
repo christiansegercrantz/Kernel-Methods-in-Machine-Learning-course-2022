@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage[margin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{comment}
+\usepackage{eurosym}
+
+\graphicspath{ {plots/} }
+
+\title{Kernel methods in machine learning - Penn and paper 3}
+\author{Christian Segercrantz 481056}
+
+
+\begin{document}
+	\maketitle
+	\pagebreak
+	\section*{Task 1}
+	\begin{align}
+		f(\theta x + (\theta - 1)y) \leq& \theta f(x) + (1-\theta) f(y) \\
+		f(z) :=& ||z|| \\
+		f(\theta x + (\theta - 1)y) =& ||\theta x + (\theta - 1)y|| \\
+		\leq & ||\theta x || + ||(\theta - 1)y||, \qquad | \text{Triangel inequality} \\
+		=& \theta ||x|| + (\theta -1)||y||, \qquad | \text{Absolutely scaleable} \\
+		=& \theta f(x) + (1-\theta) f(y) \\
+		\implies	f(\theta x + (\theta - 1)y) \leq& \theta f(x) + (1-\theta) f(y), \qquad f(z) := ||z||
+	\end{align}
+	
+	\section*{Task 2}
+	\begin{align}
+		\theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 =& (\theta_1 + \theta_2)\left( \frac{\theta_1}{\theta_1 + \theta_2} x_1 + \frac{\theta_2}{\theta_1 + \theta_2} x_2\right)  + \theta_3 x_3  \\
+		=& (1-\theta_3)\left( \frac{\theta_1}{\theta_1 + \theta_2} x_1 + \frac{\theta_2}{\theta_1 + \theta_2} x_2\right)  + \theta_3 x_3 , \qquad | \theta_1 + \theta_2 = 1 - \theta_3\\
+		x' := &  \frac{\theta_1}{\theta_1 + \theta_2} x_1 + \frac{\theta_2}{\theta_1 + \theta_2} x_2 \\
+		=& (1-\theta_3)x'  + \theta_3 x_3 \\
+	\end{align}
+	We now show that $x'$ is part of the convex set
+	\begin{align}
+		\theta_1' :=& \frac{\theta_1}{\theta_1 + \theta_2} \\ \theta_2' :=& \frac{\theta_2}{\theta_1 + \theta_2} \\
+		\theta_1' + \theta_2' =& 1, \quad \theta_1', \theta_2' \geq 0 \\
+		\implies \theta_1' x_1 + \theta_2'x_2 =& \theta_1' x_1 + (1-\theta_1')x_2
+	\end{align}
+	As we can see, $x'$ is part of the covex set $C$ and thus, we can see that the points $(1-\theta_3)x'  + \theta_3 x_3$ are also part of the convex set.
+	
+	\section*{Task 3}
+		\begin{alignat}{2}
+			\text{min }_{w, \xi, b} \quad& \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i \\
+			\text{subject to: } \quad& y_i(w^\top \phi(x_i) +b) \geq 1- \xi_i\\
+			&\xi_i \geq 0, i=1,...,m \\
+		\end{alignat}
+	\subsection*{Task 3a}
+		The Lagrangiang function becomes
+		\begin{alignat}{2}
+			L(w, \xi, b, \lambda, \nu) =& \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i \\
+		\end{alignat}{2}
+	\subsection*{Task 3b}
+		\begin{align}
+			\frac{\partial}{\partial \xi} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial \xi} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
+			=&   Cm - \sum_{i=1}^{m}\left( \lambda_i +\nu_i\right)  \\
+			Cm =&   \sum_{i=1}^{m} \lambda_i +\nu_i  \\
+			\frac{\partial}{\partial w} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial w} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
+			=& w - \sum_{i=1}^{m}\lambda_i y_i \phi(x_i) \\
+			w =& \sum_{i=1}^{m}\lambda_i y_i \phi(x_i) \\
+			\frac{\partial}{\partial b} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial b} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
+			=& \sum_{i=1}^{m}\lambda_i  \\
+			\implies \lambda_i = 0 \\
+			\implies Cm =&   \sum_{i=1}^{m} \nu_i  \\
+		\end{align}
+\end{document}
+
+
+
+
