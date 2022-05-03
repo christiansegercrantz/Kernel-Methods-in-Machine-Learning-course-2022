@@ -58,18 +58,72 @@
 			L(w, \xi, b, \lambda, \nu) =& \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i \\
 		\end{alignat}{2}
 	\subsection*{Task 3b}
+		The KKT conditions state, for the part that is relevant for our problem, that 
+		\begin{enumerate}
+			\item All inequality constraints $f_i(w^*, \xi^*,  b^*)\leq 0, i = 1,...,m$ which gives us
+			\begin{align}
+				1- \xi_i - (y_i(w^\top \phi(x_i) +b)) &\leq 0 \\
+				-\xi_i &\leq 0
+			\end{align}
+			%\item All equality constraints $h_i(x^*)= 0, i = 1,...,p$
+			\item Non-negativity of dual variables of the inequality constraints $\lambda_i^* \geq 0, \nu_i^* \geq 0, i = 1,...,m$
+			
+			\item Complementary slackness $\lambda_i^* f_i^*(x^*,\xi^*, b^*) = 0 , \nu_i^*f_i^*(x^*,\xi^*, b^*) = 0 , i = 1,...,m$
+			which gives us
+			\begin{align}
+				\lambda_i(1- \xi_i - (y_i(w^\top \phi(x_i) +b))) &= 0 ,\quad i=1,...,m \\
+				\implies 1- \xi_i - (y_i(w^\top \phi(x_i) +b)) = 0 \quad & \lor \quad  \lambda_i = 0 \\
+				-\nu_i\xi_i &= 0,\quad i=1,...,m \\
+				\implies \nu_i = 0 \quad & \lor \quad \xi_i=0
+			\end{align}
+			\item The derivative of the Lagrangian vanishes $\nabla_{w,\xi,b}L(w^*,\xi^*,b^*,\lambda^*, \nu^*) = 0$
+		\end{enumerate}
+		Let us calculate the fourth point above:
 		\begin{align}
 			\frac{\partial}{\partial \xi} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial \xi} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
-			=&   Cm - \sum_{i=1}^{m}\left( \lambda_i +\nu_i\right)  \\
-			Cm =&   \sum_{i=1}^{m} \lambda_i +\nu_i  \\
+			=&   Cm - \sum_{i=1}^{m}\left( \lambda_i^* +\nu_i^*\right)  \\
+			\frac{\partial}{\partial \xi} L(w, \xi, b, \lambda, \nu) = 0 \implies Cm =&   \sum_{i=1}^{m} \lambda_i +\nu_i  \\
 			\frac{\partial}{\partial w} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial w} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
 			=& w - \sum_{i=1}^{m}\lambda_i y_i \phi(x_i) \\
-			w =& \sum_{i=1}^{m}\lambda_i y_i \phi(x_i) \\
+			\frac{\partial}{\partial w} L(w, \xi, b, \lambda, \nu) = 0 \implies w^* =& \sum_{i=1}^{m}\lambda_i y_i \phi(x_i) \\
 			\frac{\partial}{\partial b} L(w, \xi, b, \lambda, \nu) =& \frac{\partial}{\partial b} \left( \frac{1}{2}||w||^2+ C \sum_{i=1}^{m}\xi_i + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i - y_i(w^\top \phi(x_i) +b)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i\right)  \\
-			=& \sum_{i=1}^{m}\lambda_i  \\
-			\implies \lambda_i = 0 \\
-			\implies Cm =&   \sum_{i=1}^{m} \nu_i  \\
+			=& \sum_{i=1}^{m}\lambda_i y_i  \\
+			\frac{\partial}{\partial b} L(w, \xi, b, \lambda, \nu) = 0 \land \lambda_i \geq 0\implies \lambda_i^*y_i = 0 \\
 		\end{align}
+		To state clearly:
+		\begin{align}
+			\sum_{i=1}^{m}\lambda_i^*y_i =& 0, \quad \forall i \\
+			w^* =& \sum_{i=1}^{m} \lambda_i^* y_i \phi(x_i)\\
+			\lambda_i^* + \nu_i^* =& C \implies 0\leq \lambda_i^* \leq C , \quad \forall i \\
+		\end{align}
+	\subsection*{Task 3c}
+		\begin{alignat}{2}
+			\max_{\lambda, \nu} \quad & q(\lambda, \nu) \\
+			\text{subject to: } \quad & \sum_{i=1}^{m}\lambda_i y_i = 0 \\
+									  & 0\leq \lambda_i^* \leq C, \forall i \\
+									  & (\lambda \geq 0) \\
+									  & \nu \geq 0\\
+		\end{alignat}
+		where 
+		\begin{align}
+			q(\lambda, \nu) =& \min_{w, \xi, b} L(w, \xi, b, \lambda, \nu) \\
+			=& 	\frac{1}{2}||w^*||^2+ C \sum_{i=1}^{m}\xi_i^* + \sum_{i=1}^{m}\lambda_i\left( 1-\xi_i^* - y_i(w^{*\top} \phi(x_i) +b^*)\right) + \sum_{i= 1}^{m} -\nu_i\xi_i^* \\
+			=&\frac{1}{2}||w^*||^2+ C \sum_{i=1}^{m}\xi_i^* + \sum_{i=1}^{m}(\lambda_i-\lambda_i\xi_i^* - \lambda_iy_iw^{*\top} \phi(x_i) -\lambda_iy_i b^*) + \sum_{i= 1}^{m} -\nu_i\xi_i^* \\
+			=&\frac{1}{2}||w^*||^2+ \sum_{i=1}^{m}C\xi_i^* + \lambda_i-\lambda_i\xi_i^* - \lambda_iy_iw^{*\top} \phi(x_i) -\lambda_iy_i b^* -\nu_i\xi_i^* \\
+			=&\frac{1}{2}||w^*||^2+ \sum_{i=1}^{m}\xi_i^*(\underbrace{C-\lambda_i-\nu_i}_{0}) + \lambda_i - \lambda_iy_iw^{*\top} \phi(x_i) -b^*\underbrace{\sum_{i=1}^{m}\lambda_iy_i }_{0} \\
+			=&\frac{1}{2}||w^*||^2+ \sum_{i=1}^{m} \lambda_i - \lambda_iy_iw^{*\top} \phi(x_i) \\
+			=&\frac{1}{2}w^{*\top}w^*+ \sum_{i=1}^{m} \lambda_i - \lambda_iy_iw^{*\top} \phi(x_i) \\
+			=&\frac{1}{2}\left( \sum_{i=1}^{m} \lambda_i y_i \phi(x_i)\right)^{\top}\left( \sum_{j=1}^{m} \lambda_j y_j \phi(x_j)\right) + \sum_{i=1}^{m} \lambda_i - \sum_{i=1}^{m}\lambda_iy_i\left( \sum_{j=1}^{m} \lambda_j y_j \phi(x_j)\right)^{\top} \phi(x_i) \\
+			=&\frac{1}{2} \sum_{i=1}^{m}\sum_{j=1}^{m} \lambda_i\lambda_j y_i y_j \phi(x_i)^\top \phi(x_j) + \sum_{i=1}^{m} \lambda_i - \sum_{i=1}^{m}\sum_{j=1}^{m}\lambda_i\lambda_jy_i   y_j \phi(x_j)^{\top} \phi(x_i), \quad |\kappa(x_i, x_j) = \phi(x_i)^\top \phi(x_j)\\
+			=&\frac{1}{2} \sum_{i=1}^{m}\sum_{j=1}^{m} \lambda_i\lambda_j y_i y_j \kappa(x_i, x_j)  - \sum_{i=1}^{m}\sum_{j=1}^{m}\lambda_i\lambda_jy_i   y_j \kappa(x_i, x_j)+ \sum_{i=1}^{m} \lambda_i\\
+			=&-\frac{1}{2} \sum_{i=1}^{m}\sum_{j=1}^{m} \lambda_i\lambda_j y_i y_j \kappa(x_i, x_j) + \sum_{i=1}^{m} \lambda_i
+		\end{align}
+		To summarize
+		\begin{alignat}{2}
+			\max_{\lambda} \quad & -\frac{1}{2} \sum_{i=1}^{m}\sum_{j=1}^{m} \lambda_i\lambda_j y_i y_j \kappa(x_i, x_j) + \sum_{i=1}^{m} \lambda_i \\
+			\text{subject to: } \quad & \sum_{i=1}^{m}\lambda_i y_i = 0 \\
+			& 0\leq \lambda_i \leq C, \forall i \\
+		\end{alignat}
 \end{document}
 
 
